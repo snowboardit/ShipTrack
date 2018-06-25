@@ -7,14 +7,13 @@
 
 # Import packages
 import tkinter as tk
-import tkinter.ttk as ttk
 import Package as package
-import Data
 
 
 # Main class
 class Main(tk.Tk):
 
+    shipments = []
     carrierslist = ["UPS", "FX", "ABF", "ADP"]
 
     def newshipmentpopup(self):
@@ -22,7 +21,7 @@ class Main(tk.Tk):
         popup.wm_title("New Shipment")
         popup.geometry("500x500")
 
-        # Code to center window in screen here
+        
 
         pk = package
 
@@ -56,21 +55,21 @@ class Main(tk.Tk):
         trackinglabel = tk.Label(popup, text="Tracking #: ")
         entry6 = tk.Entry(popup, textvariable=trackingEntry, justify="left")
 
-        # Define donebuttonwaspressed method
-        def donebuttonwaspressed():
+        # Define setvalues method
+        def setvalues():
             newPackage = pk.Package(str(jobEntry.get()),
                                 str(poEntry.get()),
                                 str(fromEntry.get()),
                                 str(dateEntry.get()),
                                 entry5.get('active'),
                                 str(trackingEntry.get()))
-            Data.shipments.append(newPackage)
+            self.shipments.append(newPackage)
 
             popup.destroy()
 
 
         # Set values for new package
-        donebutton = tk.Button(popup, text="Add", command=lambda: donebuttonwaspressed())
+        donebutton = tk.Button(popup, text="Add", command=lambda: setvalues())
 
         # Grid placement
         titlelabel.grid(column=0, row=0, rowspan=2, sticky="nsew")
@@ -107,41 +106,9 @@ class Main(tk.Tk):
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
 
-        # Setup treeview
-        tableColumns = ("Job", "PO", "From", "Date Ordered", "Carrier", "Tracking")
-        table = ttk.Treeview(container, columns=tableColumns)
-
-        table.heading("#0", text="Job")
-        table.heading("#1", text="PO")
-        table.heading("#2", text="From")
-        table.heading("#3", text="Date Ordered")
-        table.heading("#4", text="Carrier")
-        table.heading("#5", text="Tracking")
-
-        table.column("#0", stretch="yes")
-        table.column("#1", stretch="yes")
-        table.column("#2", stretch="yes")
-        table.column("#3", stretch="yes")
-        table.column("#4", stretch="yes")
-        table.column("#5", stretch="yes")
-
-        def load_data():
-            for shipment in self.shipments:
-                table.insert("", "end", text=shipment.job, values=(shipment.PO, shipment.frm, shipment.dateOrdered, shipment.carrier, shipment.tracking))
-
-        # Insert new shipments into table
-        def insert_data():
-
-
-        def refresh_data():
-
-        table.pack(expand="true", fill="both", side="top")
-
-        # Setup menubar
         menubar = tk.Menu(container)
         filemenu = tk.Menu(menubar)
         filemenu.add_command(label="New shipment...", command=lambda: self.newshipmentpopup())
-        filemenu.add_command(label="Refresh", command=refresh_table())
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=lambda: exit())
         menubar.add_cascade(label="File", menu=filemenu)

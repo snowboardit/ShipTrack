@@ -8,3 +8,6 @@
  - Formats data for presentation on table in Main Class
 """
 
+# Import
+from tkinter import *
+
